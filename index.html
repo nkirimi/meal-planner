@@ -3,56 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Kenyan Meal Planner with Voting</title>
+    <title>Kenyan Meal Planner - Family Voting</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#e67e22">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: #f5f0e6;
             padding: 16px;
             color: #1f1c18;
         }
-
-        .planner {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* Header */
+        .planner { max-width: 700px; margin: 0 auto; }
         .header {
             background: #e67e22;
             color: white;
             padding: 20px 18px;
-            border-radius: 28px 28px 24px 24px;
+            border-radius: 28px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
-        .header h1 {
-            font-size: 1.9rem;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            flex-wrap: wrap;
-        }
-        .sub {
-            font-size: 0.85rem;
-            opacity: 0.9;
-            margin-top: 6px;
-        }
-
-        /* Buttons */
-        .print-btn, .reset-poll-btn {
+        .header h1 { font-size: 1.9rem; display: flex; justify-content: space-between; flex-wrap: wrap; }
+        .print-btn {
             background: #2c3e2f;
-            border: none;
             color: white;
             padding: 12px 20px;
             border-radius: 60px;
@@ -61,60 +34,33 @@
             cursor: pointer;
             margin-bottom: 16px;
             width: 100%;
-            text-align: center;
-            font-family: inherit;
+            border: none;
         }
-        .reset-poll-btn {
-            background: #7f8c8d;
-            margin-bottom: 0;
-        }
-        .button-group {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .button-group .print-btn {
-            margin-bottom: 0;
-            flex: 1;
-        }
-
-        /* Cards */
         .card {
             background: white;
             border-radius: 28px;
             padding: 20px 18px;
             margin-bottom: 22px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
             border: 1px solid #ffdfb8;
         }
         .card h2 {
             font-size: 1.5rem;
-            font-weight: 600;
             border-left: 6px solid #e67e22;
             padding-left: 12px;
             margin-bottom: 18px;
             color: #3b2a1f;
         }
-
-        /* Poll Section */
-        .poll-card {
-            background: linear-gradient(135deg, #fff5e8 0%, #ffe8d4 100%);
-            border: 2px solid #e67e22;
+        .poll-card { background: linear-gradient(135deg, #fff5e8 0%, #ffe8d4 100%); border: 2px solid #e67e22; }
+        .poll-selector { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .poll-selector select, .poll-selector button {
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid #ffdfb8;
+            background: white;
+            font-family: inherit;
         }
-        .poll-question {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: #b85c1a;
-            text-align: center;
-        }
-        .poll-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
+        .poll-selector button { background: #e67e22; color: white; border: none; cursor: pointer; }
+        .poll-options { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
         .poll-option {
             background: white;
             border-radius: 60px;
@@ -122,31 +68,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #f0d5b0;
-            transition: all 0.2s;
-        }
-        .poll-option:hover {
-            border-color: #e67e22;
-            transform: scale(1.01);
-        }
-        .vote-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
             flex-wrap: wrap;
-        }
-        .vote-meal {
-            font-weight: 600;
-            font-size: 1rem;
-            min-width: 140px;
-        }
-        .vote-count {
-            background: #f0e2d2;
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #b85c1a;
+            gap: 10px;
         }
         .vote-btn {
             background: #e67e22;
@@ -155,530 +78,350 @@
             padding: 6px 16px;
             border-radius: 40px;
             cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 500;
-            transition: 0.2s;
         }
-        .vote-btn:active {
-            transform: scale(0.95);
-        }
-        .winner-badge {
-            background: #27ae60;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
-        .poll-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .poll-selector select, .poll-selector button {
-            padding: 10px 14px;
-            border-radius: 40px;
-            border: 1px solid #ffdfb8;
-            background: white;
-            font-family: inherit;
-            font-size: 0.9rem;
-        }
-        .poll-selector button {
-            background: #e67e22;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .poll-stats {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #7f8c8d;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #f0d5b0;
-        }
-
-        /* Weekly Menu */
-        .week-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .day-row {
-            background: #fffaf2;
-            border-radius: 20px;
-            padding: 12px 16px;
-            border-bottom: 1px solid #fee0b0;
-        }
-        .day-name {
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #c45c1a;
-            margin-bottom: 8px;
-            display: inline-block;
-            background: #fff0df;
-            padding: 2px 14px;
-            border-radius: 40px;
-        }
-        .meals {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 8px;
-        }
-        .meal-item {
-            flex: 1;
-            min-width: 140px;
-            background: #ffffffd9;
-            padding: 8px 12px;
-            border-radius: 18px;
-        }
-        .meal-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #e67e22;
-            font-weight: 600;
-        }
-        .meal-text {
-            font-size: 0.9rem;
-            margin-top: 4px;
-            font-weight: 500;
-            color: #2a241e;
-        }
-
-        /* Grocery & Favourites */
-        .two-col {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .list-block ul {
-            list-style: none;
-            margin-top: 12px;
-        }
-        .list-block li {
-            padding: 8px 0 8px 28px;
-            border-bottom: 1px solid #f5e2cd;
-            font-size: 0.95rem;
-            position: relative;
-        }
-        .list-block li::before {
-            content: "✓";
-            position: absolute;
-            left: 4px;
-            color: #e67e22;
-            font-weight: bold;
-        }
-        .fav-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 12px;
-        }
-        .fav-chip {
-            background: #faeedc;
-            padding: 8px 16px;
-            border-radius: 60px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Print Styles */
-        @media print {
-            body {
-                background: white;
-                padding: 0.2in;
-                margin: 0;
-            }
-            .print-btn, .reset-poll-btn, .button-group, .poll-card, .vote-btn {
-                display: none;
-            }
-            .card {
-                box-shadow: none;
-                border: 1px solid #ddd;
-                break-inside: avoid;
-            }
-        }
-
-        footer {
-            text-align: center;
-            font-size: 0.7rem;
-            margin: 30px 0 20px;
-            color: #a47c52;
-        }
-        .edit-note {
-            font-size: 0.7rem;
-            color: #b87333;
-            margin-top: 8px;
-            text-align: right;
-        }
+        .winner-badge { background: #27ae60; color: white; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; }
+        .rating-stars { display: flex; gap: 4px; cursor: pointer; }
+        .star { font-size: 1.2rem; color: #ccc; }
+        .star.active { color: #f5b042; }
+        .meal-item { background: #fffaf2; border-radius: 16px; padding: 12px; margin-bottom: 10px; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .photo-upload { margin-top: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .meal-photo { max-width: 80px; max-height: 80px; border-radius: 12px; object-fit: cover; cursor: pointer; }
+        .leaderboard-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #ffdfb8; }
+        .rank-1 { background: #fff3c4; border-radius: 40px; padding: 4px 12px; font-weight: bold; }
+        .rank-2 { background: #e8e8e8; border-radius: 40px; padding: 4px 12px; }
+        .rank-3 { background: #f5debc; border-radius: 40px; padding: 4px 12px; }
+        .winner-history-item { padding: 10px; background: #fef2e0; border-radius: 16px; margin-bottom: 8px; }
+        .meals-grid { display: flex; flex-direction: column; gap: 8px; }
+        @media print { .print-btn, .poll-card, .vote-btn, .photo-upload { display: none; } }
+        .edit-note { font-size: 0.7rem; color: #b87333; margin-top: 8px; text-align: right; }
+        button { font-family: inherit; }
+        .history-date { font-size: 0.7rem; color: #888; margin-left: 8px; }
     </style>
 </head>
 <body>
 <div class="planner">
     <div class="header">
-        <h1>🍛 my meal planner <span>🇰🇪</span></h1>
-        <div class="sub">breakfast · dinner · with household voting!</div>
+        <h1>🍛 Kenyan Meal Planner <span>🇰🇪</span></h1>
+        <div>vote · cook · rate · win</div>
     </div>
+    <button class="print-btn" onclick="window.print()">🖨️ PRINT & PIN</button>
 
-    <div class="button-group">
-        <button class="print-btn" onclick="window.print()">🖨️ PRINT & PIN ON FRIDGE</button>
-    </div>
-
-    <!-- VOTING POLL SECTION -->
+    <!-- VOTING POLL -->
     <div class="card poll-card">
-        <h2>🗳️ household dinner poll</h2>
+        <h2>🗳️ household poll</h2>
         <div class="poll-selector">
             <select id="pollDaySelect">
-                <option value="monday">Monday</option>
-                <option value="tuesday">Tuesday</option>
-                <option value="wednesday">Wednesday</option>
-                <option value="thursday">Thursday</option>
-                <option value="friday">Friday</option>
-                <option value="saturday">Saturday</option>
+                <option value="monday">Monday</option><option value="tuesday">Tuesday</option>
+                <option value="wednesday">Wednesday</option><option value="thursday">Thursday</option>
+                <option value="friday">Friday</option><option value="saturday">Saturday</option>
                 <option value="sunday">Sunday</option>
             </select>
-            <select id="pollMealSelect">
-                <option value="dinner">🌙 Dinner</option>
-                <option value="breakfast">🌅 Breakfast</option>
-            </select>
-            <button onclick="loadPoll()">📊 Load Poll</button>
-            <button onclick="resetPoll()" style="background:#7f8c8d;">🔄 Reset Votes</button>
+            <select id="pollMealSelect"><option value="dinner">🌙 Dinner</option><option value="breakfast">🌅 Breakfast</option></select>
+            <button onclick="loadPoll()">Load Poll</button>
+            <button onclick="addCustomOption()" style="background:#27ae60;">➕ Add Option</button>
+            <button onclick="surpriseMe()" style="background:#8e44ad;">🎲 Surprise Me</button>
         </div>
-        <div id="pollContainer">
-            <div class="poll-question">Select a day and meal to start voting!</div>
-        </div>
-        <div class="poll-stats" id="pollStats">👨‍👩‍👧‍👦 Tap a dish to vote — everyone can vote once per poll</div>
+        <div id="pollContainer">Select a day & meal to start voting!</div>
     </div>
 
-    <!-- WEEKLY MENU -->
+    <!-- MOST WANTED LEADERBOARD -->
     <div class="card">
-        <h2>📆 weekly menu</h2>
-        <div class="week-grid" id="weeklyMeals"></div>
-        <div class="edit-note">✏️ click any meal text to edit — changes save automatically</div>
+        <h2>👑 Most Wanted (This Month)</h2>
+        <div id="leaderboardContainer"></div>
+        <div class="edit-note">🏆 Dishes with the most votes this month</div>
     </div>
 
-    <!-- GROCERY + FAVOURITES -->
-    <div class="two-col">
-        <div class="card">
-            <h2>🛒 grocery list</h2>
-            <div class="list-block" id="groceryList"></div>
-            <div class="edit-note">✏️ tap item to edit, press Enter to add new</div>
-        </div>
-        <div class="card">
-            <h2>⭐ favourites</h2>
-            <div class="list-block" id="favouritesList"></div>
-            <div class="edit-note">✨ click any favourite to edit, + add new dish</div>
-        </div>
+    <!-- WEEKLY MENU (editable) -->
+    <div class="card">
+        <h2>📆 weekly plan</h2>
+        <div id="weeklyMeals"></div>
+        <div class="edit-note">✏️ click any meal to edit</div>
     </div>
-    <footer>🇰🇪 Everyone votes — winning meal gets cooked! Changes save automatically.</footer>
+
+    <!-- RATINGS & MEAL PHOTOS -->
+    <div class="card">
+        <h2>⭐ meal ratings & 📸 photos</h2>
+        <div id="ratingsContainer"></div>
+    </div>
+
+    <!-- MEAL HISTORY (what you actually ate) -->
+    <div class="card">
+        <h2>📅 meal history (last 7 days)</h2>
+        <div id="mealHistoryContainer"></div>
+        <div class="edit-note">✅ Click "Ate This" after cooking to log it</div>
+    </div>
+
+    <!-- WEEKLY WINNER HISTORY -->
+    <div class="card">
+        <h2>🏆 weekly winner history</h2>
+        <div id="winnerHistoryContainer"></div>
+        <div class="edit-note">Winning dishes from past weeks</div>
+    </div>
+
+    <!-- GROCERY & FAVOURITES -->
+    <div class="card"><h2>🛒 grocery list</h2><div id="groceryList"></div><div class="edit-note">tap to edit</div></div>
+    <div class="card"><h2>⭐ favourite dishes</h2><div id="favouritesList"></div></div>
+    
+    <footer style="text-align:center; font-size:0.7rem; margin-top:20px;">🇰🇪 Everyone votes — winner gets cooked! Changes save automatically.</footer>
 </div>
 
 <script>
-    // ---------- DEFAULT KENYAN MENU ----------
-    const defaultMeals = [
-        { day: "Monday", breakfast: "Uji + Mandazi", dinner: "Githeri with potatoes & sukuma wiki" },
-        { day: "Tuesday", breakfast: "Chai ya rangi + Mahamri", dinner: "Nyama choma + Kachumbari" },
-        { day: "Wednesday", breakfast: "Weetabix + warm milk & bananas", dinner: "Fried tilapia + Ugali & sukuma wiki" },
-        { day: "Thursday", breakfast: "Boiled sweet potatoes + coconut / ginger tea", dinner: "Mukimo + Beef stew" },
-        { day: "Friday", breakfast: "Chai masala + Chapati", dinner: "Chicken biryani + kachumbari" },
-        { day: "Saturday", breakfast: "Mayai kukaanga (eggs & tomatoes) + bread/tea", dinner: "Pilau + cabbage salad" },
-        { day: "Sunday", breakfast: "Matumbo (tripe) + chapati & tea", dinner: "Nyama choma + ndizi choma, ugali" }
-    ];
+    // ---------- DATA ----------
+    let meals = loadData('kenyanMeals', [
+        { day: "Monday", breakfast: "Uji + Mandazi", dinner: "Githeri + sukuma wiki" },
+        { day: "Tuesday", breakfast: "Chai + Mahamri", dinner: "Nyama choma + kachumbari" },
+        { day: "Wednesday", breakfast: "Weetabix + bananas", dinner: "Fried tilapia + ugali" },
+        { day: "Thursday", breakfast: "Sweet potatoes + tea", dinner: "Mukimo + beef stew" },
+        { day: "Friday", breakfast: "Chai masala + chapati", dinner: "Chicken biryani" },
+        { day: "Saturday", breakfast: "Mayai kukaanga + bread", dinner: "Pilau + kachumbari" },
+        { day: "Sunday", breakfast: "Matumbo + chapati", dinner: "Nyama choma + ndizi" }
+    ]);
 
-    const defaultGrocery = ["Maize flour (ugali)", "Rice", "Beans", "Potatoes", "Sukuma wiki", "Tomatoes, onions", "Beef / goat meat", "Chicken", "Tilapia", "Tea leaves, milk, ginger", "Chapati flour", "Mandazi flour & yeast"];
-    const defaultFavourites = ["🍗 Nyama choma", "🥘 Githeri", "🐟 Fried tilapia", "🍛 Pilau", "🥬 Sukuma wiki", "🥔 Mukimo", "🍩 Mahamri"];
-
-    // Load data
-    let meals = loadData('kenyanMeals', defaultMeals);
-    let groceryItems = loadData('groceryList', defaultGrocery);
-    let favItems = loadData('favList', defaultFavourites);
     let votes = loadData('mealVotes', {});
+    let ratings = loadData('mealRatings', {});
+    let mealPhotos = loadData('mealPhotos', {});
+    let mealHistory = loadData('mealHistory', []); // array of {date, dish, day, mealType}
+    let weeklyWinners = loadData('weeklyWinners', []); // array of {week, dish, votes, date}
+    let customPollOptions = loadData('customPollOptions', {});
+    let groceryItems = loadData('groceryList', ["Ugali flour", "Rice", "Beans", "Potatoes", "Sukuma wiki", "Tomatoes", "Onions", "Beef", "Chicken", "Tilapia", "Tea", "Chapati flour"]);
+    let favItems = loadData('favList', ["Nyama choma", "Githeri", "Pilau", "Sukuma wiki", "Chapati", "Mahamri"]);
 
-    function loadData(key, defaultValue) {
-        const stored = localStorage.getItem(key);
-        if (stored) {
-            try { return JSON.parse(stored); } catch(e) { return defaultValue; }
-        }
-        return defaultValue;
+    function loadData(k, d) { let s = localStorage.getItem(k); return s ? JSON.parse(s) : d; }
+    function saveData(k, d) { localStorage.setItem(k, JSON.stringify(d)); }
+
+    // Helper: get current week number
+    function getWeekNumber() {
+        const now = new Date();
+        const start = new Date(now.getFullYear(), 0, 1);
+        const days = Math.floor((now - start) / (24 * 60 * 60 * 1000));
+        return Math.ceil((days + start.getDay() + 1) / 7);
     }
 
-    function saveData(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
-
-    // Render weekly meals (editable)
-    function renderWeeklyPlan() {
-        const container = document.getElementById('weeklyMeals');
-        if (!container) return;
-        container.innerHTML = '';
-        meals.forEach((dayObj, idx) => {
-            const row = document.createElement('div');
-            row.className = 'day-row';
-            row.innerHTML = `
-                <div class="day-name">${dayObj.day}</div>
-                <div class="meals">
-                    <div class="meal-item">
-                        <div class="meal-label">🌅 breakfast</div>
-                        <div class="meal-text" contenteditable="true" data-idx="${idx}" data-meal="breakfast">${escapeHtml(dayObj.breakfast)}</div>
-                    </div>
-                    <div class="meal-item">
-                        <div class="meal-label">🌙 dinner</div>
-                        <div class="meal-text" contenteditable="true" data-idx="${idx}" data-meal="dinner">${escapeHtml(dayObj.dinner)}</div>
-                    </div>
-                </div>
-            `;
-            container.appendChild(row);
+    // ---------- RENDER WEEKLY MEAL ----------
+    function renderWeekly() {
+        let html = '';
+        meals.forEach((m, i) => {
+            html += `<div class="meal-item">
+                <strong>${m.day}</strong><br>
+                🌅 <span contenteditable="true" onblur="updateMeal(${i}, 'breakfast', this.innerText)">${escapeHtml(m.breakfast)}</span><br>
+                🌙 <span contenteditable="true" onblur="updateMeal(${i}, 'dinner', this.innerText)">${escapeHtml(m.dinner)}</span>
+            </div>`;
         });
-        attachMealEditors();
+        document.getElementById('weeklyMeals').innerHTML = html;
     }
+    function updateMeal(idx, type, val) { meals[idx][type] = val; saveData('kenyanMeals', meals); }
 
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    function attachMealEditors() {
-        document.querySelectorAll('.meal-text[contenteditable="true"]').forEach(el => {
-            el.removeEventListener('blur', handleMealEdit);
-            el.addEventListener('blur', handleMealEdit);
-        });
-    }
-
-    function handleMealEdit(e) {
-        const target = e.target;
-        const idx = parseInt(target.getAttribute('data-idx'));
-        const mealType = target.getAttribute('data-meal');
-        let newValue = target.innerText.trim();
-        if (newValue === "") newValue = "(edit meal)";
-        if (mealType === 'breakfast') meals[idx].breakfast = newValue;
-        else if (mealType === 'dinner') meals[idx].dinner = newValue;
-        saveData('kenyanMeals', meals);
-        renderWeeklyPlan();
-        loadPoll(); // refresh poll if open
-    }
-
-    // Voting functions
-    function getMealKey(day, mealType) {
-        const dayLower = day.toLowerCase();
-        return `${dayLower}_${mealType}`;
-    }
-
-    function getCurrentMealsForPoll(dayName, mealType) {
-        const dayObj = meals.find(m => m.day.toLowerCase() === dayName.toLowerCase());
-        if (!dayObj) return [];
-        const mealText = dayObj[mealType];
-        // Split by " + " or " & " or " with " or "," to get options
-        let options = mealText.split(/ \+ | & | with |, /);
-        // Clean up and remove duplicates
-        options = [...new Set(options.map(o => o.trim()))];
-        if (options.length === 1) {
-            // If only one item, try to split by spaces for multiple dishes
-            options = mealText.split(/\s+\+\s+|\s+&\s+/);
-        }
-        return options.filter(o => o.length > 0 && o.length < 50);
+    // ---------- POLL ----------
+    function getPollKey() { return document.getElementById('pollDaySelect').value + '_' + document.getElementById('pollMealSelect').value; }
+    
+    function getPollOptions() {
+        let key = getPollKey();
+        let dayName = document.getElementById('pollDaySelect').value;
+        let dayObj = meals.find(m => m.day.toLowerCase() === dayName);
+        let mealType = document.getElementById('pollMealSelect').value;
+        let defaultMeal = dayObj ? dayObj[mealType] : "";
+        let baseOptions = defaultMeal.split(/ \+ | & | with |, /).map(o=>o.trim()).filter(o=>o);
+        let custom = customPollOptions[key] || [];
+        let allOptions = [...new Set([...baseOptions, ...custom])];
+        if (allOptions.length < 3) allOptions.push("Something else", "Surprise dish");
+        return allOptions.slice(0, 6);
     }
 
     function loadPoll() {
-        const daySelect = document.getElementById('pollDaySelect');
-        const mealSelect = document.getElementById('pollMealSelect');
-        const day = daySelect.value;
-        const mealType = mealSelect.value;
-        const dayCapitalized = day.charAt(0).toUpperCase() + day.slice(1);
-        
-        const options = getCurrentMealsForPoll(day, mealType);
-        const pollKey = getMealKey(day, mealType);
-        const currentVotes = votes[pollKey] || {};
-        
-        const container = document.getElementById('pollContainer');
-        if (options.length === 0) {
-            container.innerHTML = `<div class="poll-question">⚠️ Could not split meal into options. Try editing the meal to include " + " like "Rice + Beans"</div>`;
+        let options = getPollOptions();
+        let key = getPollKey();
+        let currentVotes = votes[key] || {};
+        let total = Object.values(currentVotes).reduce((a,b)=>a+b,0);
+        let html = `<div class="poll-options">`;
+        options.forEach(opt => {
+            let count = currentVotes[opt] || 0;
+            let percent = total ? Math.round(count/total*100) : 0;
+            let isWinner = total>0 && count === Math.max(...Object.values(currentVotes), 0);
+            html += `<div class="poll-option">
+                        <span><strong>${escapeHtml(opt)}</strong> (${count} votes, ${percent}%) ${isWinner ? '<span class="winner-badge">🏆 WINNING</span>' : ''}</span>
+                        <button class="vote-btn" onclick="castVote('${key}', '${escapeHtml(opt).replace(/'/g, "\\'")}')">👍 Vote</button>
+                    </div>`;
+        });
+        html += `</div><button onclick="resetPoll()" style="background:#7f8c8d; padding:8px 16px; border-radius:40px; border:none; color:white; margin-top:8px;">🔄 Reset this poll</button>
+                 <button onclick="saveWeeklyWinner()" style="background:#27ae60; padding:8px 16px; border-radius:40px; border:none; color:white; margin-top:8px; margin-left:8px;">🏆 Save Winner for This Week</button>`;
+        document.getElementById('pollContainer').innerHTML = html;
+    }
+
+    function castVote(key, opt) { if (!votes[key]) votes[key] = {}; votes[key][opt] = (votes[key][opt]||0)+1; saveData('mealVotes', votes); loadPoll(); renderLeaderboard(); }
+    function resetPoll() { let key = getPollKey(); delete votes[key]; saveData('mealVotes', votes); loadPoll(); renderLeaderboard(); }
+    function addCustomOption() { let key = getPollKey(); let newOpt = prompt("Enter a new dish option:"); if(newOpt && newOpt.trim()) { if(!customPollOptions[key]) customPollOptions[key]=[]; customPollOptions[key].push(newOpt.trim()); saveData('customPollOptions', customPollOptions); loadPoll(); } }
+    function surpriseMe() {
+        let surpriseDishes = ["Pizza Kenyan style", "Spaghetti + sausages", "Mokimo + chicken", "Ugali + omena", "Chapati + beans", "Fried rice + kuku", "Matoke + beef", "Mbaazi + mahamri", "Viazi vya rojo"];
+        let random = surpriseDishes[Math.floor(Math.random() * surpriseDishes.length)];
+        let key = getPollKey();
+        if(!customPollOptions[key]) customPollOptions[key]=[];
+        customPollOptions[key].push(random);
+        saveData('customPollOptions', customPollOptions);
+        loadPoll();
+        alert(`🎲 Added "${random}" to the poll!`);
+    }
+
+    function saveWeeklyWinner() {
+        let key = getPollKey();
+        let currentVotes = votes[key] || {};
+        if (Object.keys(currentVotes).length === 0) { alert("No votes yet! Let people vote first."); return; }
+        let winner = Object.entries(currentVotes).sort((a,b) => b[1] - a[1])[0];
+        let weekNum = getWeekNumber();
+        weeklyWinners.unshift({
+            week: weekNum,
+            dish: winner[0],
+            votes: winner[1],
+            date: new Date().toLocaleDateString(),
+            pollKey: key
+        });
+        weeklyWinners = weeklyWinners.slice(0, 10); // keep last 10
+        saveData('weeklyWinners', weeklyWinners);
+        renderWinnerHistory();
+        alert(`🏆 ${winner[0]} saved as this week's winner!`);
+    }
+
+    // ---------- MOST WANTED LEADERBOARD ----------
+    function renderLeaderboard() {
+        // Aggregate all votes from last 30 days (simplified: all current votes)
+        let dishScores = {};
+        for (let [pollKey, pollVotes] of Object.entries(votes)) {
+            for (let [dish, count] of Object.entries(pollVotes)) {
+                dishScores[dish] = (dishScores[dish] || 0) + count;
+            }
+        }
+        let sorted = Object.entries(dishScores).sort((a,b) => b[1] - a[1]).slice(0, 5);
+        if (sorted.length === 0) {
+            document.getElementById('leaderboardContainer').innerHTML = '<p>✨ No votes yet — start voting!</p>';
             return;
         }
-        
-        let html = `<div class="poll-question">🗳️ Vote for ${dayCapitalized} ${mealType === 'breakfast' ? '🌅 Breakfast' : '🌙 Dinner'}</div>`;
-        html += `<div class="poll-options">`;
-        
-        let totalVotes = 0;
-        options.forEach(option => {
-            const voteCount = currentVotes[option] || 0;
-            totalVotes += voteCount;
+        let html = '';
+        sorted.forEach(([dish, score], idx) => {
+            let rankClass = idx === 0 ? 'rank-1' : (idx === 1 ? 'rank-2' : 'rank-3');
+            html += `<div class="leaderboard-item">
+                        <span><span class="${rankClass}">#${idx+1}</span> <strong>${escapeHtml(dish)}</strong></span>
+                        <span style="font-size:1.2rem;">${score} vote${score !== 1 ? 's' : ''}</span>
+                    </div>`;
         });
-        
-        options.forEach(option => {
-            const voteCount = currentVotes[option] || 0;
-            const percentage = totalVotes > 0 ? Math.round((voteCount / totalVotes) * 100) : 0;
-            const isWinner = totalVotes > 0 && voteCount === Math.max(...Object.values(currentVotes).concat([0]));
-            html += `
-                <div class="poll-option">
-                    <div class="vote-info">
-                        <span class="vote-meal">${escapeHtml(option)}</span>
-                        <span class="vote-count">${voteCount} vote${voteCount !== 1 ? 's' : ''}</span>
-                        ${isWinner && totalVotes > 0 ? '<span class="winner-badge">🏆 WINNING</span>' : ''}
+        document.getElementById('leaderboardContainer').innerHTML = html;
+    }
+
+    // ---------- RATINGS & PHOTOS ----------
+    function renderRatings() {
+        let html = '';
+        meals.forEach(day => {
+            ['breakfast','dinner'].forEach(mealType => {
+                let key = `${day.day}_${mealType}`;
+                let mealName = day[mealType];
+                let rating = ratings[key] || 0;
+                let photo = mealPhotos[key] || '';
+                html += `<div class="meal-item" id="meal-${key}">
+                    <div class="flex-between">
+                        <span><strong>${day.day} ${mealType==='breakfast'?'🌅':'🌙'}</strong> ${escapeHtml(mealName)}</span>
+                        <div class="rating-stars" data-key="${key}">${[1,2,3,4,5].map(s => `<span class="star ${s<=rating ? 'active' : ''}" data-rating="${s}">★</span>`).join('')}</div>
                     </div>
-                    <button class="vote-btn" onclick="castVote('${pollKey}', '${escapeHtml(option).replace(/'/g, "\\'")}')">👍 Vote</button>
-                </div>
-            `;
+                    <div class="photo-upload">
+                        ${photo ? `<img src="${photo}" class="meal-photo" onclick="viewPhoto('${photo}')" alt="meal photo">` : '📷 No photo yet'}
+                        <button onclick="uploadPhoto('${key}')" style="background:#3498db; border:none; color:white; padding:4px 12px; border-radius:20px;">📸 Add/Change Photo</button>
+                        <button onclick="logMealAte('${day.day}', '${mealType}', '${escapeHtml(mealName).replace(/'/g, "\\'")}')" style="background:#27ae60; border:none; color:white; padding:4px 12px; border-radius:20px;">✅ Ate This</button>
+                    </div>
+                </div>`;
+            });
         });
-        
-        html += `</div>`;
-        html += `<div class="poll-stats">✅ Total votes: ${totalVotes} • Everyone can vote once per poll</div>`;
-        container.innerHTML = html;
-        document.getElementById('pollStats').innerHTML = `👨‍👩‍👧‍👦 Click 👍 to vote for your favorite! Winner gets cooked 🍳`;
-    }
-    
-    function castVote(pollKey, option) {
-        if (!votes[pollKey]) votes[pollKey] = {};
-        votes[pollKey][option] = (votes[pollKey][option] || 0) + 1;
-        saveData('mealVotes', votes);
-        loadPoll(); // refresh display
-    }
-    
-    function resetPoll() {
-        const daySelect = document.getElementById('pollDaySelect');
-        const mealSelect = document.getElementById('pollMealSelect');
-        const pollKey = getMealKey(daySelect.value, mealSelect.value);
-        if (votes[pollKey]) {
-            delete votes[pollKey];
-            saveData('mealVotes', votes);
-        }
-        loadPoll();
-    }
-
-    // Grocery list render
-    function renderGrocery() {
-        const container = document.getElementById('groceryList');
-        if (!container) return;
-        const ul = document.createElement('ul');
-        groceryItems.forEach((item, idx) => {
-            const li = document.createElement('li');
-            li.innerHTML = `<span contenteditable="true" class="editable-grocery" data-grocery-idx="${idx}">${escapeHtml(item)}</span>`;
-            ul.appendChild(li);
+        document.getElementById('ratingsContainer').innerHTML = html;
+        document.querySelectorAll('.rating-stars').forEach(el => {
+            el.querySelectorAll('.star').forEach(star => {
+                star.onclick = () => { let key = el.dataset.key; let rating = parseInt(star.dataset.rating); ratings[key] = rating; saveData('mealRatings', ratings); renderRatings(); };
+            });
         });
-        const addLi = document.createElement('li');
-        addLi.innerHTML = `<span style="opacity:0.7;">➕ </span><span contenteditable="true" id="newGroceryField" data-new="true">add new item...</span>`;
-        ul.appendChild(addLi);
-        container.innerHTML = '';
-        container.appendChild(ul);
-        attachGroceryEditors();
     }
 
-    function attachGroceryEditors() {
-        document.querySelectorAll('.editable-grocery').forEach(el => {
-            el.removeEventListener('blur', handleGroceryEdit);
-            el.addEventListener('blur', handleGroceryEdit);
+    function uploadPhoto(mealKey) {
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e) => {
+            let file = e.target.files[0];
+            let reader = new FileReader();
+            reader.onload = (event) => {
+                mealPhotos[mealKey] = event.target.result;
+                saveData('mealPhotos', mealPhotos);
+                renderRatings();
+            };
+            reader.readAsDataURL(file);
+        };
+        input.click();
+    }
+
+    function viewPhoto(photoData) { window.open(photoData, '_blank'); }
+
+    // ---------- MEAL HISTORY ----------
+    function logMealAte(day, mealType, mealName) {
+        let historyEntry = {
+            date: new Date().toLocaleDateString(),
+            timestamp: Date.now(),
+            day: day,
+            mealType: mealType,
+            dish: mealName
+        };
+        mealHistory.unshift(historyEntry);
+        mealHistory = mealHistory.slice(0, 14); // keep last 14 entries
+        saveData('mealHistory', mealHistory);
+        renderMealHistory();
+        alert(`✅ Logged: ${day} ${mealType} - ${mealName}`);
+    }
+
+    function renderMealHistory() {
+        if (mealHistory.length === 0) {
+            document.getElementById('mealHistoryContainer').innerHTML = '<p>📋 No meals logged yet — click "Ate This" after cooking!</p>';
+            return;
+        }
+        let last7Days = mealHistory.slice(0, 7);
+        let html = '<div class="meals-grid">';
+        last7Days.forEach(entry => {
+            html += `<div class="meal-item">
+                        <div class="flex-between">
+                            <span><strong>${entry.day} ${entry.mealType === 'breakfast' ? '🌅' : '🌙'}</strong> ${escapeHtml(entry.dish)}</span>
+                            <span class="history-date">📅 ${entry.date}</span>
+                        </div>
+                    </div>`;
         });
-        const newField = document.getElementById('newGroceryField');
-        if (newField) {
-            newField.removeEventListener('blur', handleNewGrocery);
-            newField.addEventListener('blur', handleNewGrocery);
-        }
+        html += '</div>';
+        document.getElementById('mealHistoryContainer').innerHTML = html;
     }
 
-    function handleGroceryEdit(e) {
-        const span = e.target;
-        const idx = parseInt(span.getAttribute('data-grocery-idx'));
-        let newVal = span.innerText.trim();
-        if (newVal === "") newVal = "item";
-        if (!isNaN(idx) && groceryItems[idx]) {
-            groceryItems[idx] = newVal;
-            saveData('groceryList', groceryItems);
-            renderGrocery();
+    // ---------- WEEKLY WINNER HISTORY ----------
+    function renderWinnerHistory() {
+        if (weeklyWinners.length === 0) {
+            document.getElementById('winnerHistoryContainer').innerHTML = '<p>🏆 No winners yet — save a poll winner!</p>';
+            return;
         }
-    }
-
-    function handleNewGrocery(e) {
-        let newVal = e.target.innerText.trim();
-        if (newVal && newVal !== "add new item..." && newVal !== "") {
-            groceryItems.push(newVal);
-            saveData('groceryList', groceryItems);
-        }
-        renderGrocery();
-    }
-
-    // Favourites render
-    function renderFavourites() {
-        const container = document.getElementById('favouritesList');
-        if (!container) return;
-        const div = document.createElement('div');
-        div.className = 'fav-grid';
-        favItems.forEach((fav, idx) => {
-            const chip = document.createElement('div');
-            chip.className = 'fav-chip';
-            chip.innerHTML = `<span contenteditable="true" class="editable-fav" data-fav-idx="${idx}">${escapeHtml(fav)}</span> <span style="font-size:12px; cursor:pointer;" class="remove-fav" data-remove="${idx}">🗑️</span>`;
-            div.appendChild(chip);
+        let html = '';
+        weeklyWinners.forEach(winner => {
+            html += `<div class="winner-history-item">
+                        <div class="flex-between">
+                            <span><strong>🏆 Week ${winner.week}</strong> - ${escapeHtml(winner.dish)}</span>
+                            <span>🗳️ ${winner.votes} votes</span>
+                        </div>
+                        <div style="font-size:0.7rem; color:#888;">📅 ${winner.date}</div>
+                    </div>`;
         });
-        const addChip = document.createElement('div');
-        addChip.className = 'fav-chip';
-        addChip.style.background = "#f0e2d2";
-        addChip.innerHTML = `<span contenteditable="true" id="newFavField" data-new-fav="true">+ new favourite</span>`;
-        div.appendChild(addChip);
-        container.innerHTML = '';
-        container.appendChild(div);
-        attachFavEditors();
+        document.getElementById('winnerHistoryContainer').innerHTML = html;
     }
 
-    function attachFavEditors() {
-        document.querySelectorAll('.editable-fav').forEach(el => {
-            el.removeEventListener('blur', handleFavEdit);
-            el.addEventListener('blur', handleFavEdit);
-        });
-        document.querySelectorAll('.remove-fav').forEach(btn => {
-            btn.removeEventListener('click', handleRemoveFav);
-            btn.addEventListener('click', handleRemoveFav);
-        });
-        const newFav = document.getElementById('newFavField');
-        if (newFav) {
-            newFav.removeEventListener('blur', handleNewFav);
-            newFav.addEventListener('blur', handleNewFav);
-        }
-    }
+    // ---------- GROCERY & FAVOURITES ----------
+    function renderGrocery() { let ul = '<ul>'; groceryItems.forEach((i,idx)=> { ul += `<li><span contenteditable="true" onblur="updateGrocery(${idx}, this.innerText)">${escapeHtml(i)}</span></li>`; }); ul += `<li><span contenteditable="true" onblur="addGrocery(this.innerText)">+ add item...</span></li></ul>`; document.getElementById('groceryList').innerHTML = ul; }
+    function updateGrocery(idx, val) { if(val && val!="+ add item...") { groceryItems[idx] = val; saveData('groceryList', groceryItems); renderGrocery(); } }
+    function addGrocery(val) { if(val && val!="+ add item..." && val.trim()) { groceryItems.push(val.trim()); saveData('groceryList', groceryItems); renderGrocery(); } }
+    function renderFavs() { let html = '<div style="display:flex; flex-wrap:wrap; gap:8px;">'; favItems.forEach((f,idx)=>{ html += `<span style="background:#faeedc; padding:6px 14px; border-radius:40px;"><span contenteditable="true" onblur="updateFav(${idx}, this.innerText)">${escapeHtml(f)}</span> <span style="cursor:pointer;" onclick="removeFav(${idx})">🗑️</span></span>`; }); html += `<span style="background:#f0e2d2; padding:6px 14px; border-radius:40px;"><span contenteditable="true" onblur="addFav(this.innerText)">+ new</span></span></div>`; document.getElementById('favouritesList').innerHTML = html; }
+    function updateFav(idx, val) { favItems[idx] = val; saveData('favList', favItems); renderFavs(); }
+    function removeFav(idx) { favItems.splice(idx,1); saveData('favList', favItems); renderFavs(); }
+    function addFav(val) { if(val && val!="+ new" && val.trim()) { favItems.push(val.trim()); saveData('favList', favItems); renderFavs(); } }
 
-    function handleFavEdit(e) {
-        const span = e.target;
-        const idx = parseInt(span.getAttribute('data-fav-idx'));
-        let newVal = span.innerText.trim();
-        if (newVal === "") newVal = "favourite dish";
-        if (!isNaN(idx) && favItems[idx]) {
-            favItems[idx] = newVal;
-            saveData('favList', favItems);
-            renderFavourites();
-        }
-    }
+    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, function(m) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]; }); }
 
-    function handleRemoveFav(e) {
-        e.stopPropagation();
-        const idx = parseInt(e.target.getAttribute('data-remove'));
-        if (!isNaN(idx)) {
-            favItems.splice(idx, 1);
-            saveData('favList', favItems);
-            renderFavourites();
-        }
-    }
-
-    function handleNewFav(e) {
-        let newVal = e.target.innerText.trim();
-        if (newVal && newVal !== "+ new favourite" && newVal !== "") {
-            favItems.push(newVal);
-            saveData('favList', favItems);
-        }
-        renderFavourites();
-    }
-
-    // Initial render
-    renderWeeklyPlan();
-    renderGrocery();
-    renderFavourites();
-    loadPoll();
+    // ---------- INIT ----------
+    renderWeekly(); renderRatings(); renderGrocery(); renderFavs(); loadPoll(); renderLeaderboard(); renderMealHistory(); renderWinnerHistory();
 </script>
 </body>
 </html>
