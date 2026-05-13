@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>My Meal Planner</title>
+    <title>Kenyan Meal Planner with Voting</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#e67e22">
     <style>
         * {
             margin: 0;
@@ -18,13 +21,12 @@
             color: #1f1c18;
         }
 
-        /* main container */
         .planner {
             max-width: 700px;
             margin: 0 auto;
         }
 
-        /* header */
+        /* Header */
         .header {
             background: #e67e22;
             color: white;
@@ -36,7 +38,6 @@
         .header h1 {
             font-size: 1.9rem;
             font-weight: 600;
-            letter-spacing: -0.3px;
             display: flex;
             justify-content: space-between;
             align-items: baseline;
@@ -48,27 +49,37 @@
             margin-top: 6px;
         }
 
-        /* print button */
-        .print-btn {
+        /* Buttons */
+        .print-btn, .reset-poll-btn {
             background: #2c3e2f;
             border: none;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 60px;
             font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
-            transition: 0.2s;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             width: 100%;
             text-align: center;
             font-family: inherit;
         }
-        .print-btn:hover {
-            background: #1e2a21;
+        .reset-poll-btn {
+            background: #7f8c8d;
+            margin-bottom: 0;
+        }
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .button-group .print-btn {
+            margin-bottom: 0;
+            flex: 1;
         }
 
-        /* cards */
+        /* Cards */
         .card {
             background: white;
             border-radius: 28px;
@@ -86,7 +97,109 @@
             color: #3b2a1f;
         }
 
-        /* weekly grid – minimal */
+        /* Poll Section */
+        .poll-card {
+            background: linear-gradient(135deg, #fff5e8 0%, #ffe8d4 100%);
+            border: 2px solid #e67e22;
+        }
+        .poll-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #b85c1a;
+            text-align: center;
+        }
+        .poll-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .poll-option {
+            background: white;
+            border-radius: 60px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #f0d5b0;
+            transition: all 0.2s;
+        }
+        .poll-option:hover {
+            border-color: #e67e22;
+            transform: scale(1.01);
+        }
+        .vote-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .vote-meal {
+            font-weight: 600;
+            font-size: 1rem;
+            min-width: 140px;
+        }
+        .vote-count {
+            background: #f0e2d2;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #b85c1a;
+        }
+        .vote-btn {
+            background: #e67e22;
+            border: none;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .vote-btn:active {
+            transform: scale(0.95);
+        }
+        .winner-badge {
+            background: #27ae60;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .poll-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .poll-selector select, .poll-selector button {
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid #ffdfb8;
+            background: white;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .poll-selector button {
+            background: #e67e22;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .poll-stats {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0d5b0;
+        }
+
+        /* Weekly Menu */
         .week-grid {
             display: flex;
             flex-direction: column;
@@ -135,15 +248,7 @@
             color: #2a241e;
         }
 
-        /* editable note */
-        .edit-note {
-            font-size: 0.75rem;
-            color: #b87333;
-            margin-top: 6px;
-            text-align: right;
-        }
-
-        /* grocery & favourites grid */
+        /* Grocery & Favourites */
         .two-col {
             display: flex;
             flex-direction: column;
@@ -183,40 +288,20 @@
             gap: 6px;
         }
 
-        /* print styles (PDF ready) */
+        /* Print Styles */
         @media print {
             body {
                 background: white;
                 padding: 0.2in;
                 margin: 0;
             }
-            .planner {
-                max-width: 100%;
-            }
-            .print-btn {
+            .print-btn, .reset-poll-btn, .button-group, .poll-card, .vote-btn {
                 display: none;
             }
             .card {
                 box-shadow: none;
                 border: 1px solid #ddd;
                 break-inside: avoid;
-                page-break-inside: avoid;
-            }
-            .day-row {
-                break-inside: avoid;
-            }
-            .header {
-                background: #e67e22;
-                color: white;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .list-block li::before {
-                content: "•";
-            }
-            a, .edit-note {
-                text-decoration: none;
-                color: black;
             }
         }
 
@@ -226,49 +311,76 @@
             margin: 30px 0 20px;
             color: #a47c52;
         }
+        .edit-note {
+            font-size: 0.7rem;
+            color: #b87333;
+            margin-top: 8px;
+            text-align: right;
+        }
     </style>
 </head>
 <body>
 <div class="planner">
     <div class="header">
         <h1>🍛 my meal planner <span>🇰🇪</span></h1>
-        <div class="sub">breakfast · dinner · Kenyan style</div>
+        <div class="sub">breakfast · dinner · with household voting!</div>
     </div>
 
-    <button class="print-btn" onclick="window.print()">🖨️ PRINT & PIN ON FRIDGE</button>
+    <div class="button-group">
+        <button class="print-btn" onclick="window.print()">🖨️ PRINT & PIN ON FRIDGE</button>
+    </div>
 
-    <!-- WEEKLY MEAL PLAN (EDITABLE directly on page) -->
+    <!-- VOTING POLL SECTION -->
+    <div class="card poll-card">
+        <h2>🗳️ household dinner poll</h2>
+        <div class="poll-selector">
+            <select id="pollDaySelect">
+                <option value="monday">Monday</option>
+                <option value="tuesday">Tuesday</option>
+                <option value="wednesday">Wednesday</option>
+                <option value="thursday">Thursday</option>
+                <option value="friday">Friday</option>
+                <option value="saturday">Saturday</option>
+                <option value="sunday">Sunday</option>
+            </select>
+            <select id="pollMealSelect">
+                <option value="dinner">🌙 Dinner</option>
+                <option value="breakfast">🌅 Breakfast</option>
+            </select>
+            <button onclick="loadPoll()">📊 Load Poll</button>
+            <button onclick="resetPoll()" style="background:#7f8c8d;">🔄 Reset Votes</button>
+        </div>
+        <div id="pollContainer">
+            <div class="poll-question">Select a day and meal to start voting!</div>
+        </div>
+        <div class="poll-stats" id="pollStats">👨‍👩‍👧‍👦 Tap a dish to vote — everyone can vote once per poll</div>
+    </div>
+
+    <!-- WEEKLY MENU -->
     <div class="card">
         <h2>📆 weekly menu</h2>
-        <div class="week-grid" id="weeklyMeals">
-            <!-- data will be filled with JS but also editable -->
-        </div>
+        <div class="week-grid" id="weeklyMeals"></div>
         <div class="edit-note">✏️ click any meal text to edit — changes save automatically</div>
     </div>
 
-    <!-- GROCERY LIST + FAVOURITES side by side on mobile as stack -->
+    <!-- GROCERY + FAVOURITES -->
     <div class="two-col">
         <div class="card">
             <h2>🛒 grocery list</h2>
-            <div class="list-block" id="groceryList">
-                <!-- dynamic editable grocery list -->
-            </div>
+            <div class="list-block" id="groceryList"></div>
             <div class="edit-note">✏️ tap item to edit, press Enter to add new</div>
         </div>
-
         <div class="card">
             <h2>⭐ favourites</h2>
-            <div class="list-block" id="favouritesList">
-                <!-- dynamic favourites -->
-            </div>
+            <div class="list-block" id="favouritesList"></div>
             <div class="edit-note">✨ click any favourite to edit, + add new dish</div>
         </div>
     </div>
-    <footer>📍 personal meal planner — changes saved in your browser</footer>
+    <footer>🇰🇪 Everyone votes — winning meal gets cooked! Changes save automatically.</footer>
 </div>
 
 <script>
-    // ---------- DEFAULT KENYAN MENU (monday to sunday) ----------
+    // ---------- DEFAULT KENYAN MENU ----------
     const defaultMeals = [
         { day: "Monday", breakfast: "Uji + Mandazi", dinner: "Githeri with potatoes & sukuma wiki" },
         { day: "Tuesday", breakfast: "Chai ya rangi + Mahamri", dinner: "Nyama choma + Kachumbari" },
@@ -279,30 +391,19 @@
         { day: "Sunday", breakfast: "Matumbo (tripe) + chapati & tea", dinner: "Nyama choma + ndizi choma, ugali" }
     ];
 
-    // default grocery items
-    const defaultGrocery = [
-        "Maize flour (ugali)", "Rice", "Beans", "Potatoes", "Sukuma wiki",
-        "Tomatoes, onions", "Beef / goat meat", "Chicken", "Tilapia",
-        "Tea leaves, milk, ginger", "Chapati flour", "Mandazi flour & yeast"
-    ];
+    const defaultGrocery = ["Maize flour (ugali)", "Rice", "Beans", "Potatoes", "Sukuma wiki", "Tomatoes, onions", "Beef / goat meat", "Chicken", "Tilapia", "Tea leaves, milk, ginger", "Chapati flour", "Mandazi flour & yeast"];
+    const defaultFavourites = ["🍗 Nyama choma", "🥘 Githeri", "🐟 Fried tilapia", "🍛 Pilau", "🥬 Sukuma wiki", "🥔 Mukimo", "🍩 Mahamri"];
 
-    // default favourite dishes
-    const defaultFavourites = [
-        "🍗 Nyama choma", "🥘 Githeri", "🐟 Fried tilapia", "🍛 Pilau",
-        "🥬 Sukuma wiki", "🥔 Mukimo", "🍩 Mahamri"
-    ];
-
-    // load from localStorage or use defaults
+    // Load data
     let meals = loadData('kenyanMeals', defaultMeals);
     let groceryItems = loadData('groceryList', defaultGrocery);
     let favItems = loadData('favList', defaultFavourites);
+    let votes = loadData('mealVotes', {});
 
     function loadData(key, defaultValue) {
         const stored = localStorage.getItem(key);
         if (stored) {
-            try {
-                return JSON.parse(stored);
-            } catch(e) { return defaultValue; }
+            try { return JSON.parse(stored); } catch(e) { return defaultValue; }
         }
         return defaultValue;
     }
@@ -311,7 +412,7 @@
         localStorage.setItem(key, JSON.stringify(data));
     }
 
-    // render weekly meal plan (editable inline)
+    // Render weekly meals (editable)
     function renderWeeklyPlan() {
         const container = document.getElementById('weeklyMeals');
         if (!container) return;
@@ -343,14 +444,11 @@
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
             return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
         });
     }
 
     function attachMealEditors() {
-        const editors = document.querySelectorAll('.meal-text[contenteditable="true"]');
-        editors.forEach(el => {
+        document.querySelectorAll('.meal-text[contenteditable="true"]').forEach(el => {
             el.removeEventListener('blur', handleMealEdit);
             el.addEventListener('blur', handleMealEdit);
         });
@@ -365,11 +463,98 @@
         if (mealType === 'breakfast') meals[idx].breakfast = newValue;
         else if (mealType === 'dinner') meals[idx].dinner = newValue;
         saveData('kenyanMeals', meals);
-        // re-render to keep sync but keep focus? just rerender quickly to avoid duplicate issues
         renderWeeklyPlan();
+        loadPoll(); // refresh poll if open
     }
 
-    // Grocery list render (editable inline)
+    // Voting functions
+    function getMealKey(day, mealType) {
+        const dayLower = day.toLowerCase();
+        return `${dayLower}_${mealType}`;
+    }
+
+    function getCurrentMealsForPoll(dayName, mealType) {
+        const dayObj = meals.find(m => m.day.toLowerCase() === dayName.toLowerCase());
+        if (!dayObj) return [];
+        const mealText = dayObj[mealType];
+        // Split by " + " or " & " or " with " or "," to get options
+        let options = mealText.split(/ \+ | & | with |, /);
+        // Clean up and remove duplicates
+        options = [...new Set(options.map(o => o.trim()))];
+        if (options.length === 1) {
+            // If only one item, try to split by spaces for multiple dishes
+            options = mealText.split(/\s+\+\s+|\s+&\s+/);
+        }
+        return options.filter(o => o.length > 0 && o.length < 50);
+    }
+
+    function loadPoll() {
+        const daySelect = document.getElementById('pollDaySelect');
+        const mealSelect = document.getElementById('pollMealSelect');
+        const day = daySelect.value;
+        const mealType = mealSelect.value;
+        const dayCapitalized = day.charAt(0).toUpperCase() + day.slice(1);
+        
+        const options = getCurrentMealsForPoll(day, mealType);
+        const pollKey = getMealKey(day, mealType);
+        const currentVotes = votes[pollKey] || {};
+        
+        const container = document.getElementById('pollContainer');
+        if (options.length === 0) {
+            container.innerHTML = `<div class="poll-question">⚠️ Could not split meal into options. Try editing the meal to include " + " like "Rice + Beans"</div>`;
+            return;
+        }
+        
+        let html = `<div class="poll-question">🗳️ Vote for ${dayCapitalized} ${mealType === 'breakfast' ? '🌅 Breakfast' : '🌙 Dinner'}</div>`;
+        html += `<div class="poll-options">`;
+        
+        let totalVotes = 0;
+        options.forEach(option => {
+            const voteCount = currentVotes[option] || 0;
+            totalVotes += voteCount;
+        });
+        
+        options.forEach(option => {
+            const voteCount = currentVotes[option] || 0;
+            const percentage = totalVotes > 0 ? Math.round((voteCount / totalVotes) * 100) : 0;
+            const isWinner = totalVotes > 0 && voteCount === Math.max(...Object.values(currentVotes).concat([0]));
+            html += `
+                <div class="poll-option">
+                    <div class="vote-info">
+                        <span class="vote-meal">${escapeHtml(option)}</span>
+                        <span class="vote-count">${voteCount} vote${voteCount !== 1 ? 's' : ''}</span>
+                        ${isWinner && totalVotes > 0 ? '<span class="winner-badge">🏆 WINNING</span>' : ''}
+                    </div>
+                    <button class="vote-btn" onclick="castVote('${pollKey}', '${escapeHtml(option).replace(/'/g, "\\'")}')">👍 Vote</button>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
+        html += `<div class="poll-stats">✅ Total votes: ${totalVotes} • Everyone can vote once per poll</div>`;
+        container.innerHTML = html;
+        document.getElementById('pollStats').innerHTML = `👨‍👩‍👧‍👦 Click 👍 to vote for your favorite! Winner gets cooked 🍳`;
+    }
+    
+    function castVote(pollKey, option) {
+        if (!votes[pollKey]) votes[pollKey] = {};
+        votes[pollKey][option] = (votes[pollKey][option] || 0) + 1;
+        saveData('mealVotes', votes);
+        loadPoll(); // refresh display
+    }
+    
+    function resetPoll() {
+        const daySelect = document.getElementById('pollDaySelect');
+        const mealSelect = document.getElementById('pollMealSelect');
+        const pollKey = getMealKey(daySelect.value, mealSelect.value);
+        if (votes[pollKey]) {
+            delete votes[pollKey];
+            saveData('mealVotes', votes);
+        }
+        loadPoll();
+    }
+
+    // Grocery list render
     function renderGrocery() {
         const container = document.getElementById('groceryList');
         if (!container) return;
@@ -379,7 +564,6 @@
             li.innerHTML = `<span contenteditable="true" class="editable-grocery" data-grocery-idx="${idx}">${escapeHtml(item)}</span>`;
             ul.appendChild(li);
         });
-        // add new item row
         const addLi = document.createElement('li');
         addLi.innerHTML = `<span style="opacity:0.7;">➕ </span><span contenteditable="true" id="newGroceryField" data-new="true">add new item...</span>`;
         ul.appendChild(addLi);
@@ -408,7 +592,7 @@
         if (!isNaN(idx) && groceryItems[idx]) {
             groceryItems[idx] = newVal;
             saveData('groceryList', groceryItems);
-            renderGrocery();  // refresh
+            renderGrocery();
         }
     }
 
@@ -421,7 +605,7 @@
         renderGrocery();
     }
 
-    // Favourites render (editable + add)
+    // Favourites render
     function renderFavourites() {
         const container = document.getElementById('favouritesList');
         if (!container) return;
@@ -433,7 +617,6 @@
             chip.innerHTML = `<span contenteditable="true" class="editable-fav" data-fav-idx="${idx}">${escapeHtml(fav)}</span> <span style="font-size:12px; cursor:pointer;" class="remove-fav" data-remove="${idx}">🗑️</span>`;
             div.appendChild(chip);
         });
-        // add new favourite button
         const addChip = document.createElement('div');
         addChip.className = 'fav-chip';
         addChip.style.background = "#f0e2d2";
@@ -491,10 +674,11 @@
         renderFavourites();
     }
 
-    // initial render all
+    // Initial render
     renderWeeklyPlan();
     renderGrocery();
     renderFavourites();
+    loadPoll();
 </script>
 </body>
 </html>
