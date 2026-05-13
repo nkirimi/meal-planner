@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>My Kenyan Meal Planner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f5f0e6;
+            padding: 16px;
+            color: #1f1c18;
+        }
+
+        /* main container */
+        .planner {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* header */
+        .header {
+            background: #e67e22;
+            color: white;
+            padding: 20px 18px;
+            border-radius: 28px 28px 24px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+        .sub {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 6px;
+        }
+
+        /* print button */
+        .print-btn {
+            background: #2c3e2f;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-family: inherit;
+        }
+        .print-btn:hover {
+            background: #1e2a21;
+        }
+
+        /* cards */
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 20px 18px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            border: 1px solid #ffdfb8;
+        }
+        .card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            border-left: 6px solid #e67e22;
+            padding-left: 12px;
+            margin-bottom: 18px;
+            color: #3b2a1f;
+        }
+
+        /* weekly grid – minimal */
+        .week-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .day-row {
+            background: #fffaf2;
+            border-radius: 20px;
+            padding: 12px 16px;
+            border-bottom: 1px solid #fee0b0;
+        }
+        .day-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #c45c1a;
+            margin-bottom: 8px;
+            display: inline-block;
+            background: #fff0df;
+            padding: 2px 14px;
+            border-radius: 40px;
+        }
+        .meals {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .meal-item {
+            flex: 1;
+            min-width: 140px;
+            background: #ffffffd9;
+            padding: 8px 12px;
+            border-radius: 18px;
+        }
+        .meal-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #e67e22;
+            font-weight: 600;
+        }
+        .meal-text {
+            font-size: 0.9rem;
+            margin-top: 4px;
+            font-weight: 500;
+            color: #2a241e;
+        }
+
+        /* editable note */
+        .edit-note {
+            font-size: 0.75rem;
+            color: #b87333;
+            margin-top: 6px;
+            text-align: right;
+        }
+
+        /* grocery & favourites grid */
+        .two-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .list-block ul {
+            list-style: none;
+            margin-top: 12px;
+        }
+        .list-block li {
+            padding: 8px 0 8px 28px;
+            border-bottom: 1px solid #f5e2cd;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        .list-block li::before {
+            content: "✓";
+            position: absolute;
+            left: 4px;
+            color: #e67e22;
+            font-weight: bold;
+        }
+        .fav-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .fav-chip {
+            background: #faeedc;
+            padding: 8px 16px;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* print styles (PDF ready) */
+        @media print {
+            body {
+                background: white;
+                padding: 0.2in;
+                margin: 0;
+            }
+            .planner {
+                max-width: 100%;
+            }
+            .print-btn {
+                display: none;
+            }
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            .day-row {
+                break-inside: avoid;
+            }
+            .header {
+                background: #e67e22;
+                color: white;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .list-block li::before {
+                content: "•";
+            }
+            a, .edit-note {
+                text-decoration: none;
+                color: black;
+            }
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            margin: 30px 0 20px;
+            color: #a47c52;
+        }
+    </style>
+</head>
+<body>
+<div class="planner">
+    <div class="header">
+        <h1>🍛 my meal planner <span>🇰🇪</span></h1>
+        <div class="sub">breakfast · dinner · Kenyan style</div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">🖨️ PRINT & PIN ON FRIDGE</button>
+
+    <!-- WEEKLY MEAL PLAN (EDITABLE directly on page) -->
+    <div class="card">
+        <h2>📆 weekly menu</h2>
+        <div class="week-grid" id="weeklyMeals">
+            <!-- data will be filled with JS but also editable -->
+        </div>
+        <div class="edit-note">✏️ click any meal text to edit — changes save automatically</div>
+    </div>
+
+    <!-- GROCERY LIST + FAVOURITES side by side on mobile as stack -->
+    <div class="two-col">
+        <div class="card">
+            <h2>🛒 grocery list</h2>
+            <div class="list-block" id="groceryList">
+                <!-- dynamic editable grocery list -->
+            </div>
+            <div class="edit-note">✏️ tap item to edit, press Enter to add new</div>
+        </div>
+
+        <div class="card">
+            <h2>⭐ favourites</h2>
+            <div class="list-block" id="favouritesList">
+                <!-- dynamic favourites -->
+            </div>
+            <div class="edit-note">✨ click any favourite to edit, + add new dish</div>
+        </div>
+    </div>
+    <footer>📍 personal meal planner — changes saved in your browser</footer>
+</div>
+
+<script>
+    // ---------- DEFAULT KENYAN MENU (monday to sunday) ----------
+    const defaultMeals = [
+        { day: "Monday", breakfast: "Uji + Mandazi", dinner: "Githeri with potatoes & sukuma wiki" },
+        { day: "Tuesday", breakfast: "Chai ya rangi + Mahamri", dinner: "Nyama choma + Kachumbari" },
+        { day: "Wednesday", breakfast: "Weetabix + warm milk & bananas", dinner: "Fried tilapia + Ugali & sukuma wiki" },
+        { day: "Thursday", breakfast: "Boiled sweet potatoes + coconut / ginger tea", dinner: "Mukimo + Beef stew" },
+        { day: "Friday", breakfast: "Chai masala + Chapati", dinner: "Chicken biryani + kachumbari" },
+        { day: "Saturday", breakfast: "Mayai kukaanga (eggs & tomatoes) + bread/tea", dinner: "Pilau + cabbage salad" },
+        { day: "Sunday", breakfast: "Matumbo (tripe) + chapati & tea", dinner: "Nyama choma + ndizi choma, ugali" }
+    ];
+
+    // default grocery items
+    const defaultGrocery = [
+        "Maize flour (ugali)", "Rice", "Beans", "Potatoes", "Sukuma wiki",
+        "Tomatoes, onions", "Beef / goat meat", "Chicken", "Tilapia",
+        "Tea leaves, milk, ginger", "Chapati flour", "Mandazi flour & yeast"
+    ];
+
+    // default favourite dishes
+    const defaultFavourites = [
+        "🍗 Nyama choma", "🥘 Githeri", "🐟 Fried tilapia", "🍛 Pilau",
+        "🥬 Sukuma wiki", "🥔 Mukimo", "🍩 Mahamri"
+    ];
+
+    // load from localStorage or use defaults
+    let meals = loadData('kenyanMeals', defaultMeals);
+    let groceryItems = loadData('groceryList', defaultGrocery);
+    let favItems = loadData('favList', defaultFavourites);
+
+    function loadData(key, defaultValue) {
+        const stored = localStorage.getItem(key);
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch(e) { return defaultValue; }
+        }
+        return defaultValue;
+    }
+
+    function saveData(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    // render weekly meal plan (editable inline)
+    function renderWeeklyPlan() {
+        const container = document.getElementById('weeklyMeals');
+        if (!container) return;
+        container.innerHTML = '';
+        meals.forEach((dayObj, idx) => {
+            const row = document.createElement('div');
+            row.className = 'day-row';
+            row.innerHTML = `
+                <div class="day-name">${dayObj.day}</div>
+                <div class="meals">
+                    <div class="meal-item">
+                        <div class="meal-label">🌅 breakfast</div>
+                        <div class="meal-text" contenteditable="true" data-idx="${idx}" data-meal="breakfast">${escapeHtml(dayObj.breakfast)}</div>
+                    </div>
+                    <div class="meal-item">
+                        <div class="meal-label">🌙 dinner</div>
+                        <div class="meal-text" contenteditable="true" data-idx="${idx}" data-meal="dinner">${escapeHtml(dayObj.dinner)}</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+        attachMealEditors();
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    function attachMealEditors() {
+        const editors = document.querySelectorAll('.meal-text[contenteditable="true"]');
+        editors.forEach(el => {
+            el.removeEventListener('blur', handleMealEdit);
+            el.addEventListener('blur', handleMealEdit);
+        });
+    }
+
+    function handleMealEdit(e) {
+        const target = e.target;
+        const idx = parseInt(target.getAttribute('data-idx'));
+        const mealType = target.getAttribute('data-meal');
+        let newValue = target.innerText.trim();
+        if (newValue === "") newValue = "(edit meal)";
+        if (mealType === 'breakfast') meals[idx].breakfast = newValue;
+        else if (mealType === 'dinner') meals[idx].dinner = newValue;
+        saveData('kenyanMeals', meals);
+        // re-render to keep sync but keep focus? just rerender quickly to avoid duplicate issues
+        renderWeeklyPlan();
+    }
+
+    // Grocery list render (editable inline)
+    function renderGrocery() {
+        const container = document.getElementById('groceryList');
+        if (!container) return;
+        const ul = document.createElement('ul');
+        groceryItems.forEach((item, idx) => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span contenteditable="true" class="editable-grocery" data-grocery-idx="${idx}">${escapeHtml(item)}</span>`;
+            ul.appendChild(li);
+        });
+        // add new item row
+        const addLi = document.createElement('li');
+        addLi.innerHTML = `<span style="opacity:0.7;">➕ </span><span contenteditable="true" id="newGroceryField" data-new="true">add new item...</span>`;
+        ul.appendChild(addLi);
+        container.innerHTML = '';
+        container.appendChild(ul);
+        attachGroceryEditors();
+    }
+
+    function attachGroceryEditors() {
+        document.querySelectorAll('.editable-grocery').forEach(el => {
+            el.removeEventListener('blur', handleGroceryEdit);
+            el.addEventListener('blur', handleGroceryEdit);
+        });
+        const newField = document.getElementById('newGroceryField');
+        if (newField) {
+            newField.removeEventListener('blur', handleNewGrocery);
+            newField.addEventListener('blur', handleNewGrocery);
+        }
+    }
+
+    function handleGroceryEdit(e) {
+        const span = e.target;
+        const idx = parseInt(span.getAttribute('data-grocery-idx'));
+        let newVal = span.innerText.trim();
+        if (newVal === "") newVal = "item";
+        if (!isNaN(idx) && groceryItems[idx]) {
+            groceryItems[idx] = newVal;
+            saveData('groceryList', groceryItems);
+            renderGrocery();  // refresh
+        }
+    }
+
+    function handleNewGrocery(e) {
+        let newVal = e.target.innerText.trim();
+        if (newVal && newVal !== "add new item..." && newVal !== "") {
+            groceryItems.push(newVal);
+            saveData('groceryList', groceryItems);
+        }
+        renderGrocery();
+    }
+
+    // Favourites render (editable + add)
+    function renderFavourites() {
+        const container = document.getElementById('favouritesList');
+        if (!container) return;
+        const div = document.createElement('div');
+        div.className = 'fav-grid';
+        favItems.forEach((fav, idx) => {
+            const chip = document.createElement('div');
+            chip.className = 'fav-chip';
+            chip.innerHTML = `<span contenteditable="true" class="editable-fav" data-fav-idx="${idx}">${escapeHtml(fav)}</span> <span style="font-size:12px; cursor:pointer;" class="remove-fav" data-remove="${idx}">🗑️</span>`;
+            div.appendChild(chip);
+        });
+        // add new favourite button
+        const addChip = document.createElement('div');
+        addChip.className = 'fav-chip';
+        addChip.style.background = "#f0e2d2";
+        addChip.innerHTML = `<span contenteditable="true" id="newFavField" data-new-fav="true">+ new favourite</span>`;
+        div.appendChild(addChip);
+        container.innerHTML = '';
+        container.appendChild(div);
+        attachFavEditors();
+    }
+
+    function attachFavEditors() {
+        document.querySelectorAll('.editable-fav').forEach(el => {
+            el.removeEventListener('blur', handleFavEdit);
+            el.addEventListener('blur', handleFavEdit);
+        });
+        document.querySelectorAll('.remove-fav').forEach(btn => {
+            btn.removeEventListener('click', handleRemoveFav);
+            btn.addEventListener('click', handleRemoveFav);
+        });
+        const newFav = document.getElementById('newFavField');
+        if (newFav) {
+            newFav.removeEventListener('blur', handleNewFav);
+            newFav.addEventListener('blur', handleNewFav);
+        }
+    }
+
+    function handleFavEdit(e) {
+        const span = e.target;
+        const idx = parseInt(span.getAttribute('data-fav-idx'));
+        let newVal = span.innerText.trim();
+        if (newVal === "") newVal = "favourite dish";
+        if (!isNaN(idx) && favItems[idx]) {
+            favItems[idx] = newVal;
+            saveData('favList', favItems);
+            renderFavourites();
+        }
+    }
+
+    function handleRemoveFav(e) {
+        e.stopPropagation();
+        const idx = parseInt(e.target.getAttribute('data-remove'));
+        if (!isNaN(idx)) {
+            favItems.splice(idx, 1);
+            saveData('favList', favItems);
+            renderFavourites();
+        }
+    }
+
+    function handleNewFav(e) {
+        let newVal = e.target.innerText.trim();
+        if (newVal && newVal !== "+ new favourite" && newVal !== "") {
+            favItems.push(newVal);
+            saveData('favList', favItems);
+        }
+        renderFavourites();
+    }
+
+    // initial render all
+    renderWeeklyPlan();
+    renderGrocery();
+    renderFavourites();
+</script>
+</body>
+</html>
